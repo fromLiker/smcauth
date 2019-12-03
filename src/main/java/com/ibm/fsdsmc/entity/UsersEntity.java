@@ -13,7 +13,7 @@ public class UsersEntity {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer userid;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -33,12 +33,12 @@ public class UsersEntity {
     @Column(name = "confirmed", nullable = false)
     private String confirmed;
 
-    public Integer getId() {
-        return id;
+    public Integer getUserid() {
+        return userid;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserid(Integer userid) {
+        this.userid = userid;
     }
 
     public String getUsername() {

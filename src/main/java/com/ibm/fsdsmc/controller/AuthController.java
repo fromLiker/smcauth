@@ -47,7 +47,13 @@ public class AuthController {
     userInfo.setUsername(userDetails.getUsername());
     Set<GrantedAuthority> authorities = (Set<GrantedAuthority>) userDetails.getAuthorities();
     userInfo.setUsertype(authorities.toArray()[0].toString());
-    return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(new AuthResponse()));
+    
+//    AuthResponse authResponse = new AuthResponse();
+//    authResponse.setJwtToken(jwtToken);
+//    authResponse.setUserInfo(userInfo);
+//    return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse));
+    
+    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(userInfo));
   }
 
   @RequestMapping(value = "/authenticated", method = RequestMethod.GET)

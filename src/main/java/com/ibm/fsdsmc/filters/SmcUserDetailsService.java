@@ -18,8 +18,8 @@ public class SmcUserDetailsService implements UserDetailsService {
   UsersService usersService;
 
   @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    UsersEntity usersEntity = usersService.getUserByEmail(email);
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    UsersEntity usersEntity = usersService.getUserByUsername(username);
     if (usersEntity == null) {
       throw new UsernameNotFoundException("USERNAME NOT FOUND");
     }
@@ -29,7 +29,7 @@ public class SmcUserDetailsService implements UserDetailsService {
     if (!usersEntity.getConfirmed().equalsIgnoreCase("1")) {
       userDisabled = true;
     }
-    return User.withUsername(email).password(new BCryptPasswordEncoder().encode(password)).disabled(userDisabled).roles(role).build();
+    return User.withUsername(username).password(new BCryptPasswordEncoder().encode(password)).disabled(userDisabled).roles(role).build();
   }
 
 }

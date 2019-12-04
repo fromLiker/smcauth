@@ -6,6 +6,7 @@ import com.ibm.fsdsmc.entity.UsersEntity;
 
 public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
 		
-	UsersEntity findByEmail(String email);
+	UsersEntity findByUsername(String username);
+	// UsersEntity findByEmail(String email);
 
 }

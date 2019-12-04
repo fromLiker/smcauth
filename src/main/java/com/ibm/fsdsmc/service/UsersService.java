@@ -12,8 +12,12 @@ public class UsersService {
     @Autowired
     private UsersRepository usersRepository;
     
-    public UsersEntity getUserByEmail(String email) {
-        return usersRepository.findByEmail(email);
-      }
+    public UsersEntity getUserByUsername(String username) {
+      return usersRepository.findByUsername(username);
+    }
+
+    // public UsersEntity getUserByEmail(String email) {
+    //   return usersRepository.findByEmail(email);
+    // }
     
 }

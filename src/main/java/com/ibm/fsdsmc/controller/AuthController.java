@@ -37,16 +37,17 @@ public class AuthController {
   public ResponseEntity<CommonResult> login(@RequestBody AuthRequest request) throws Exception {
 
     Authentication authentication = authenticationManager
-        .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     // Reload password post-security so we can generate token
-    UserDetails userDetails = smcuserDetailsService.loadUserByUsername(request.getEmail());
+    UserDetails userDetails = smcuserDetailsService.loadUserByUsername(request.getUsername());
     String jwtToken = JwtTokenUtil.generateToken(userDetails, false);
     
     AuthResponse authResponse = new AuthResponse();
-    authResponse.setEmail(userDetails.getUsername());
+    // authResponse.setUsername(request.getUsername());
+    authResponse.setUsername(userDetails.getUsername());
     
     Set<GrantedAuthority> authorities = (Set<GrantedAuthority>) userDetails.getAuthorities();
     authResponse.setUsertype(authorities.toArray()[0].toString());

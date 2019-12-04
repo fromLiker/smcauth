@@ -51,17 +51,18 @@ public class AuthController {
     
     Set<GrantedAuthority> authorities = (Set<GrantedAuthority>) userDetails.getAuthorities();
     authResponse.setUsertype(authorities.toArray()[0].toString());
-//    authResponse.setJwtToken(jwtToken);
+    authResponse.setJwtToken(jwtToken);
 //    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse));
     
-    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", authResponse));
+    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", authResponse));
   }
 
-//  @RequestMapping(value = "/authenticated", method = RequestMethod.GET)
-//  @ResponseBody
-//  public ResponseEntity<ResponseBean> authenticated() throws Exception {
-//      return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data("AUTHENTICATED - USER VERIFIED"));
-//  }
+  // use for test
+  @RequestMapping(value = "/authenticated", method = RequestMethod.GET)
+  @ResponseBody
+  public ResponseEntity<ResponseBean> authenticated() throws Exception {
+      return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data("AUTHENTICATED - USER VERIFIED"));
+  }
 
   @ExceptionHandler(AuthenticationException.class)
   @ResponseStatus(UNAUTHORIZED)

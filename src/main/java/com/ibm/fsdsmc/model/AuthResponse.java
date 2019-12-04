@@ -1,13 +1,12 @@
-///**
-// * @author PingXue
-// *
-// */
-//package com.ibm.fsdsmc.model;
-//
-//public class AuthResponse {
-//
+/**
+ * @author PingXue
+ *
+ */
+package com.ibm.fsdsmc.model;
+
+public class AuthResponse {
+
 //	private String jwtToken;
-//	private UserInfo userInfo;
 //	
 //	public String getJwtToken() {
 //		return jwtToken;
@@ -15,12 +14,22 @@
 //	public void setJwtToken(String jwtToken) {
 //		this.jwtToken = jwtToken;
 //	}
-//	public UserInfo getUserInfo() {
-//		return userInfo;
-//	}
-//	public void setUserInfo(UserInfo userInfo) {
-//		this.userInfo = userInfo;
-//	}
-//	
-//	  
-//}
+	
+	private String usertype;
+	private String email;	
+
+	public String getUsertype() {
+		return usertype;
+	}
+	public void setUsertype(String usertype) {
+		this.usertype = usertype;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	  
+}

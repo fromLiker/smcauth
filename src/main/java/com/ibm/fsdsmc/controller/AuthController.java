@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import com.ibm.fsdsmc.constant.Const;
 import com.ibm.fsdsmc.filters.SmcUserDetailsService;
 import com.ibm.fsdsmc.model.AuthRequest;
-//import com.ibm.fsdsmc.model.AuthResponse;
-import com.ibm.fsdsmc.model.UserInfo;
+import com.ibm.fsdsmc.model.AuthResponse;
 import com.ibm.fsdsmc.utils.CommonResult;
 import com.ibm.fsdsmc.utils.JwtTokenUtil;
 import com.ibm.fsdsmc.utils.ResponseBean;
@@ -45,19 +44,16 @@ public class AuthController {
     // Reload password post-security so we can generate token
     UserDetails userDetails = smcuserDetailsService.loadUserByUsername(request.getEmail());
     String jwtToken = JwtTokenUtil.generateToken(userDetails, false);
-
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUsername(userDetails.getUsername());
+    
+    AuthResponse authResponse = new AuthResponse();
+    authResponse.setEmail(userDetails.getUsername());
+    
     Set<GrantedAuthority> authorities = (Set<GrantedAuthority>) userDetails.getAuthorities();
-    userInfo.setUsertype(authorities.toArray()[0].toString());
-    
-//    AuthResponse authResponse = new AuthResponse();
+    authResponse.setUsertype(authorities.toArray()[0].toString());
 //    authResponse.setJwtToken(jwtToken);
-//    authResponse.setUserInfo(userInfo);
-//    return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse));
+//    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse));
     
-//    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(userInfo));
-    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", userInfo));
+    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", authResponse));
   }
 
 //  @RequestMapping(value = "/authenticated", method = RequestMethod.GET)

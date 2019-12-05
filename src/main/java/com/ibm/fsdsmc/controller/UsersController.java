@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.ibm.fsdsmc.constant.Const;
 import com.ibm.fsdsmc.entity.UsersEntity;
 import com.ibm.fsdsmc.model.UsersInfo;
+import com.ibm.fsdsmc.service.MailService;
 import com.ibm.fsdsmc.service.UsersService;
 import com.ibm.fsdsmc.utils.BeanUtilsCopy;
 import com.ibm.fsdsmc.utils.CommonResult;
@@ -26,6 +27,9 @@ public class UsersController {
   
   @Autowired
   private PasswordEncoder passwordEncoder;
+  
+  @Autowired
+  private MailService mailService;
 
   @PostMapping("/signup")
   public ResponseEntity<CommonResult> signup(@RequestBody UsersInfo usersInfo) throws Exception {
@@ -33,7 +37,8 @@ public class UsersController {
     BeanUtilsCopy.copyPropertiesNoNull(usersInfo, usersEntity);
     String password = usersEntity.getPassword();
     usersEntity.setPassword(passwordEncoder.encode(password));
-//    usersService.saveUsersInfo(usersEntity);
+    
+    usersService.saveUsersInfo(usersEntity);
     return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "User signup successfully!"));
 
   }
@@ -41,6 +46,8 @@ public class UsersController {
   @GetMapping("/confirmed/{username}")
   public ResponseEntity<CommonResult> activeUserByUsername(@PathVariable("username") String username) throws Exception {
 	  // user click this link from email received to confirmed user
+//	  mailService.sendHTMLMail();
+	  mailService.sendSimpleEmail();
 	  if(usersService.setConfirmedByUsername(username, "1")>0)
 		  return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "User have confirmed!"));
 	  

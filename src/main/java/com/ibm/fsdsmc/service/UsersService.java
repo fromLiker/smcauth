@@ -26,9 +26,9 @@ public class UsersService {
 		return usersRepository.saveUsersEntityByUsernameAndConfirmed(username, "1");
 	};
 	
-//	public UsersEntity saveUsersInfo(UsersEntity usersEntity) {
-//		return usersRepository.saveUsersEntity(usersEntity);
-//	};
+	public UsersEntity saveUsersInfo(UsersEntity usersEntity) {
+		return usersRepository.save(usersEntity);
+	};
 
 
     

@@ -44,13 +44,11 @@ public class SmcSecurityConfig extends WebSecurityConfigurerAdapter {
 	    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // use JWT，don't create session
 	    .and().exceptionHandling().accessDeniedHandler(smcAccessDeniedHandler).authenticationEntryPoint(smcAuthenticationEntryPoint) //
 	    .and().authorizeRequests() // enable authorize HttpServletRequest
-	    .antMatchers("/", "/login/**", "/guest/**", "/actuator/**").permitAll() // permits for unlogin users
-	    .antMatchers("/authenticated/**").permitAll() // permit for signup
-	    .antMatchers("/api/v1/user/signup").permitAll() // permit for signup
-	    .antMatchers("/api/v1/user/active/**").permitAll() // permit for active user
-	    .antMatchers("/api/v1/security/signin").permitAll() // permit for signin
-	    .antMatchers("/api/v1/security/admin").hasRole("ADMIN") // only allowed for role ADMIN
-	    // .antMatchers("/api/v1/security/authenticated").hasAnyRole("ADMIN", "USER") // only allowed for roles "MENTEE", "MENTOR"
+	    .antMatchers("/smc/secure/login").permitAll() // permit for login
+	    .antMatchers("/smc/users/signup").permitAll() // permit for sign up
+	    .antMatchers("/smc/users/confirmed/**").permitAll() // permit for active user
+	    .antMatchers("/smc/secure/admin").hasRole("ADMIN") // only allowed for role ADMIN?
+	    .antMatchers("/smc/secure/authenticated/**").permitAll() // test?
 	    .anyRequest().authenticated() // need authorize for all the others
 	    .and().addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class) // JWT based security filter
 	    .headers().cacheControl(); // disable page caching

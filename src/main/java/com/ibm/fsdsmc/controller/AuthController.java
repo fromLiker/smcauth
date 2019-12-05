@@ -24,8 +24,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @CrossOrigin
 @RestController
-//@RequestMapping(value = "api/security", produces = MediaType.APPLICATION_JSON_VALUE)
-// a可访问api/security/login
+@RequestMapping(value = "smc/secure", produces = MediaType.APPLICATION_JSON_VALUE) // 可访问smc/secure/login
 public class AuthController {
 
   @Autowired
@@ -48,12 +47,11 @@ public class AuthController {
     AuthResponse authResponse = new AuthResponse();
     // authResponse.setUsername(request.getUsername());
     authResponse.setUsername(userDetails.getUsername());
-    
     Set<GrantedAuthority> authorities = (Set<GrantedAuthority>) userDetails.getAuthorities();
     authResponse.setUsertype(authorities.toArray()[0].toString());
     authResponse.setJwtToken(jwtToken);
-//    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse));
     
+//    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse)); 
     return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", authResponse));
   }
 

@@ -61,8 +61,8 @@ public class MailService {
             messageHelper.setTo(email);
             messageHelper.setCc("liker007@163.com");
             messageHelper.setSubject("Welcome to SMC system");
-            messageHelper.setText("<a href='"+ maillink + username + "'>please clink here to confirm your sign up!</a>", true);
-
+            messageHelper.setText("<a href='"+ maillink + username + "'>please click here to confirm your sign up!</a>", true);
+            System.out.println("发送html文本文件-成功");
             mailSender.send(mimeMessage);
         }catch (Exception e){
         	e.printStackTrace();

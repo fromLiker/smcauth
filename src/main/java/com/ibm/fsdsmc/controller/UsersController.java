@@ -41,15 +41,21 @@ public class UsersController {
 	UsersEntity usersEntity = new UsersEntity();
     BeanUtilsCopy.copyPropertiesNoNull(usersInfo, usersEntity);
 
-    if(usersService.saveUsersInfo(usersEntity).equals(null))
-    	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User signup failed!"));
+//    String password = usersEntity.getPassword();
+////  usersEntity.setPassword(passwordEncoder.encode(password));
+//    usersEntity.setPassword(password);
+
+    try {
+    	usersService.saveUsersInfo(usersEntity);
+    }catch (Exception e){
+    	e.printStackTrace();
+        System.out.println("signup user error!!"+e);
+        return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User sign up failed, please check your enters!"));
+    }
     
-    String password = usersEntity.getPassword();
-//    usersEntity.setPassword(passwordEncoder.encode(password));
-    usersEntity.setPassword(password);
     mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
     
-    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "User signup successfully!"));
+    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "A confirmation email have send to you, please confirm!"));
 
   }
 
@@ -60,7 +66,7 @@ public class UsersController {
 //		  return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "User have confirmed!"));
 		  System.out.println("发送html文本文件-发生成功");
 		  logger.error("User have confirmed!");
-		  return "<a href='http://localhost:4200/login'>please clink here to login SMC system</a>";
+		  return "<a href='http://localhost:4200/login'>please click here to login SMC system</a>";
 	  }
 	  return "User confirm action failed!";
 //	  return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User confirm action failed!"));

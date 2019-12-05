@@ -6,6 +6,7 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailService {
 	
+	@Value("${spring.mail.maillink}")
+	private String maillink;
+	  
 	private static Logger logger = LoggerFactory.getLogger(MailService.class);
 	
     @Autowired
@@ -24,7 +28,7 @@ public class MailService {
     private JavaMailSender javaMailSender;
 
     /**
-     * a发送简单文本文件
+     * a发送简单文本文件 for test
      */
     public void sendSimpleEmail(){
         try {
@@ -48,34 +52,22 @@ public class MailService {
      * @throws MessagingException 
      */
     @Async
-    public void sendHTMLMail() throws MessagingException{
-    	
+    public void sendHTMLMail(String email, String username) throws MessagingException{
+    
+        try {
     	MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setFrom("liker007@163.com");
+            messageHelper.setTo(email);
+            messageHelper.setCc("liker007@163.com");
+            messageHelper.setSubject("Welcome to SMC system");
+            messageHelper.setText("<a href='"+ maillink + username + "'>please clink here to confirm your sign up!</a>", true);
 
-        helper.setFrom("liker007@163.com");
-        helper.setTo("xuexp@cn.ibm.com");
-        //helper.setTo(mailBean.getReceiver().split(";"));
-        helper.setSubject("hello");
-        helper.setText("hi", true);
-
-        javaMailSender.send(mimeMessage);
-        
-//        try {
-//            MimeMessage message= mailSender.createMimeMessage();
-//            MimeMessageHelper messageHelper=new MimeMessageHelper(message,true,"utf-8");
-//            messageHelper.setFrom("liker007@163.com");
-//            messageHelper.setTo("xuexp@cn.ibm.com");
-//            messageHelper.setCc("liker007@163.com");
-////            addRecipients(Message.RecipienType.CC, InterentAddress.pares(props.getProperty("liker007@163.com")));
-//            messageHelper.setSubject("欢迎访问SMC");
-//            messageHelper.setText("<a href='http://localhost:8080/smc/users/confirmed/Liker'>please clink to confirm</a>",true);
-//
-//            mailSender.send(message);
-//        }catch (Exception e){
-//        	e.printStackTrace();
-//        	System.out.println("发送html文本文件-发生异常");
-//        	logger.error("邮件发送失败", e.getMessage());
-//        }
+            mailSender.send(mimeMessage);
+        }catch (Exception e){
+        	e.printStackTrace();
+        	System.out.println("发送html文本文件-发生异常");
+        	logger.error("html email send failed!", e.getMessage());
+        }
     }
 }

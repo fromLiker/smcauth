@@ -59,7 +59,7 @@ public class UsersController {
     // send email
 //    mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
     
-    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "A confirmation email have send to you, please confirm!"));
+    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "A confirmation email have sent to you, please go to your mailbox to confirm first!"));
 
   }
 

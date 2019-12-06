@@ -42,7 +42,8 @@ public class UsersController {
 	usersInfo.setConfirmed("0");
 	usersInfo.setUsertype("user");
     BeanUtilsCopy.copyPropertiesNoNull(usersInfo, usersEntity);
-
+    
+// a密码加密存储
 //    String password = usersEntity.getPassword();
 ////  usersEntity.setPassword(passwordEncoder.encode(password));
 //    usersEntity.setPassword(password);
@@ -55,7 +56,8 @@ public class UsersController {
         return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User sign up failed, please check your enters!"));
     }
     
-    mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
+    // send email
+//    mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
     
     return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "A confirmation email have send to you, please confirm!"));
 

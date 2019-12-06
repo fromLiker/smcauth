@@ -10,12 +10,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.ibm.fsdsmc.entity.UsersEntity;
+import com.ibm.fsdsmc.entity.Users;
 
-public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
+public interface UsersRepository extends JpaRepository<Users, Integer> {
 		
-	UsersEntity findByUsername(String username);
-	// UsersEntity findByEmail(String email);
+	Users findByUsername(String username);
+	// Users findByEmail(String email);
 	
 //	#########################################################################
   
@@ -23,12 +23,12 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
  
  @Modifying
  @Transactional
- @Query("update UsersEntity u set u.confirmed = :confirmed where u.username=:username")
- int saveUsersEntityByUsernameAndConfirmed(@Param("username") String username, @Param("confirmed") String confirmed);
+ @Query("update Users u set u.confirmed = :confirmed where u.username=:username")
+ int saveUsersByUsernameAndConfirmed(@Param("username") String username, @Param("confirmed") String confirmed);
 
 
 // @GeneratedValue(strategy = GenerationType.IDENTITY)
-// UsersEntity saveUsersEntity(UsersEntity usersEntity);
+// Users saveUsers(Users users);
  
   
 }

@@ -7,7 +7,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import com.ibm.fsdsmc.constant.Const;
-import com.ibm.fsdsmc.entity.UsersEntity;
+import com.ibm.fsdsmc.entity.Users;
 import com.ibm.fsdsmc.model.UsersInfo;
 import com.ibm.fsdsmc.service.MailService;
 import com.ibm.fsdsmc.service.UsersService;
@@ -38,18 +38,18 @@ public class UsersController {
 
   @PostMapping("/signup")
   public ResponseEntity<CommonResult> signup(@RequestBody UsersInfo usersInfo) throws Exception {
-	UsersEntity usersEntity = new UsersEntity();
+	Users users = new Users();
 	usersInfo.setConfirmed("0");
 	usersInfo.setUsertype("user");
-    BeanUtilsCopy.copyPropertiesNoNull(usersInfo, usersEntity);
+    BeanUtilsCopy.copyPropertiesNoNull(usersInfo, users);
     
 // a密码加密存储
-//    String password = usersEntity.getPassword();
-////  usersEntity.setPassword(passwordEncoder.encode(password));
-//    usersEntity.setPassword(password);
+//    String password = users.getPassword();
+////  users.setPassword(passwordEncoder.encode(password));
+//    users.setPassword(password);
 
     try {
-    	usersService.saveUsersInfo(usersEntity);
+    	usersService.saveUsersInfo(users);
     }catch (Exception e){
     	e.printStackTrace();
         System.out.println("signup user error!!"+e);

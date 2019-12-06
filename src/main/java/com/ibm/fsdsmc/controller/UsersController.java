@@ -39,6 +39,8 @@ public class UsersController {
   @PostMapping("/signup")
   public ResponseEntity<CommonResult> signup(@RequestBody UsersInfo usersInfo) throws Exception {
 	UsersEntity usersEntity = new UsersEntity();
+	usersInfo.setConfirmed("0");
+	usersInfo.setUsertype("user");
     BeanUtilsCopy.copyPropertiesNoNull(usersInfo, usersEntity);
 
 //    String password = usersEntity.getPassword();

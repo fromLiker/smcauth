@@ -16,7 +16,8 @@ import com.ibm.fsdsmc.utils.CommonResult;
 import com.ibm.fsdsmc.utils.ResponseBean;
 
 import static org.springframework.http.HttpStatus.*;
-
+import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,13 +49,8 @@ public class UsersController {
 ////  users.setPassword(passwordEncoder.encode(password));
 //    users.setPassword(password);
 
-    try {
-    	usersService.saveUsersInfo(users);
-    }catch (Exception e){
-    	e.printStackTrace();
-        System.out.println("signup user error!!"+e);
-        return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User sign up failed, please check your enters!"));
-    }
+    if(usersService.saveUsersInfo(users)==null)
+    	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User sign up failed, please check your enters!"));
     
     // send email
 //    mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
@@ -80,34 +76,40 @@ public class UsersController {
   @PostMapping("/settings")
   public ResponseEntity<CommonResult> updateUsersInfo(@RequestBody UsersInfo usersInfo) throws Exception {
 	  
-    String username = usersInfo.getUsername();
-    String oldpw = usersInfo.getPassword();
-    String newpw = usersInfo.getNewpassword();
-    
-    try {
+	  String username = usersInfo.getUsername();
+	  String oldpw = usersInfo.getPassword();
+	  String newpw = usersInfo.getNewpassword();
+	  if (StringUtils.isBlank(oldpw)) {
+		  return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Please enter old password!"));
+	  }
+	  if (StringUtils.isBlank(newpw)) {
+		  return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Please enter new password!"));
+	  }
 
-      // validate old pw
-      Users oneuser = usersService.getUserByUsernameAndPassword(username, oldpw);
-      if (oneuser == null) {
-        return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Your old password is not correct !"));
-      }
+	  // validate old pw
+	  Users oneuser = usersService.getUserByUsernameAndPassword(username, oldpw);
+	  if (oneuser == null) {
+	      return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Your old password is not correct !"));
+	  }
+	
+	  // update pw
+	  Users users = new Users();
+	  BeanUtilsCopy.copyPropertiesNoNull(oneuser, users);
+	  users.setPassword(newpw);
+	  if(usersService.saveUsersInfo(users)==null){
+		return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Password change failed, please check your enters!"));
+	  }
+	
+	  // login, changepw, logout will update lastupdate column
+	  if(!(usersService.setLastupdateByUsername(username, new Date())>0)) {
+	    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "database error, please wait a moment and retry or contact with system admin!"));
+	  }
+	  
+	  // send email
+	//   String email = oneuser.getEmail();
+	//   mailService.sendNewPasswordEmail(email, newpw);
 
-      // update pw
-      Users users = new Users();
-      BeanUtilsCopy.copyPropertiesNoNull(oneuser, users);
-      users.setPassword(newpw);
-      usersService.saveUsersInfo(users);
-      
-      // send email
-      String email = oneuser.getEmail();
-      mailService.sendNewPasswordEmail(email, newpw);
-      return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Password change successed, please relogin with your new pasword!"));
-      
-    }catch (Exception e){
-      e.printStackTrace();
-        System.out.println("password change error >>>"+e);
-        return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Password change failed, please check your enters!"));
-    }
+      return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Password change successed, you can also find your new password in your mail box, please relogin with your new pasword!"));
 
   }
 

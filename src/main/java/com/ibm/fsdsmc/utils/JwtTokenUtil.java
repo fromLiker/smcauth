@@ -56,6 +56,24 @@ public class JwtTokenUtil implements Serializable {
                .compact();
   }
 
+  /**
+   * token是否过期
+   * @return  true：过期
+   * lastLoginDate 最后一次登录时间
+   * issueDate token 签发时间
+   */
+  public static boolean isTokenExpired(Date expireDate, Date lastupDate, Date issueDate) {
+	  System.out.println("expireDate,lastupDate,issueDate >>>>"+expireDate+">>>>"+lastupDate+">>>>"+issueDate);
+      //token签发时间小于上次登录时间 过期
+      if(lastupDate == null){
+    	  // a原来token没过期
+          return expireDate.before(new Date());
+      }else{
+    	  // a原来token过期
+          return issueDate.before(lastupDate);
+      }
+  }
+
   public static String getUsername(String token) {
     return getTokenBody(token).getSubject();
   }
@@ -69,7 +87,7 @@ public class JwtTokenUtil implements Serializable {
     return getTokenBody(token).getExpiration().before(new Date());
   }
 
-  private static Claims getTokenBody(String token) { // parseClaimsJws is also verifying the token and will throw exception if token invalid
+  public static Claims getTokenBody(String token) { // parseClaimsJws is also verifying the token and will throw exception if token invalid
     return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
   }
 

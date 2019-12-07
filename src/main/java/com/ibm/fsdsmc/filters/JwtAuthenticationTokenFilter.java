@@ -9,7 +9,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.ibm.fsdsmc.entity.Users;
+import com.ibm.fsdsmc.service.UsersService;
 import com.ibm.fsdsmc.utils.JwtTokenUtil;
+
+import io.jsonwebtoken.Claims;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,12 +21,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
+  private static Logger logger = LoggerFactory.getLogger(JwtAuthenticationTokenFilter.class);
+  
   @Autowired
   private UserDetailsService userDetailsService;
+  @Autowired
+  UsersService usersService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -30,10 +40,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     String authToken = request.getHeader(JwtTokenUtil.TOKEN_HEADER);
     if (authToken != null && authToken.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
       authToken = authToken.substring(JwtTokenUtil.TOKEN_PREFIX.length());
-//      log.debug("JwtAuthenticationTokenFilter - authTokenHeader = {}", authToken);
+      logger.debug("JwtAuthenticationTokenFilter - authTokenHeader = {}", authToken);
     } else {
-      authToken = request.getParameter("jwttoken");
-//      log.debug("JwtAuthenticationTokenFilter - authTokenParams = {}" + authToken);
+      authToken = request.getParameter("jwt-token");
+      logger.debug("JwtAuthenticationTokenFilter - authTokenParams = {}" + authToken);
 
       if (authToken == null) {
         filterChain.doFilter(request, response);
@@ -43,8 +53,19 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     try {
       String username = JwtTokenUtil.getUsername(authToken); // if token invalid, will get exception here
+      Claims claims = JwtTokenUtil.getTokenBody(authToken);
+      if(claims == null ){
+      	filterChain.doFilter(request, response);
+      	return;
+      }else{
+    	  Users users = usersService.getUserByUsername(username);
+          if(JwtTokenUtil.isTokenExpired(claims.getExpiration(), users.getLastupdate(), claims.getIssuedAt())){
+          	filterChain.doFilter(request, response); 
+          	return;
+         }
+      }
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//        log.debug("JwtAuthenticationTokenFilter: checking authentication for user = {}", username);
+       logger.debug("JwtAuthenticationTokenFilter: checking authentication for user = {}", username);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (JwtTokenUtil.validateToken(authToken, userDetails)) {
           UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), "N/A",
@@ -54,8 +75,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
       }
     } catch (Exception e) {
-//      log.debug("JwtAuthenticationTokenFilter:Exception");
-//      log.error(e.getMessage(), e);
+     logger.debug("JwtAuthenticationTokenFilter:Exception");
+     logger.error(e.getMessage(), e);
     }
 
     filterChain.doFilter(request, response);

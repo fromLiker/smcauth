@@ -45,9 +45,7 @@ public class SmcSecurityConfig extends WebSecurityConfigurerAdapter {
 	    .and().exceptionHandling().accessDeniedHandler(smcAccessDeniedHandler).authenticationEntryPoint(smcAuthenticationEntryPoint) //
 	    .and().authorizeRequests() // enable authorize HttpServletRequest
 	    .antMatchers("/smc/secure/login").permitAll() // permit for login
-	    .antMatchers("/smc/secure/logout").permitAll() // permit for logout
 	    .antMatchers("/smc/secure/admin").hasRole("ADMIN") // only allowed for role ADMIN?
-	    .antMatchers("/smc/secure/authenticated/**").permitAll() // test?
 	    .antMatchers("/smc/users/signup").permitAll() // permit for sign up
 	    .antMatchers("/smc/users/confirmed/**").permitAll() // permit for confirm user
 	    .antMatchers("/smc/users/settings").permitAll() // permit for settings

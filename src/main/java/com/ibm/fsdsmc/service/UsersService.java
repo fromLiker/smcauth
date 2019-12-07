@@ -1,5 +1,6 @@
 package com.ibm.fsdsmc.service;
 
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,9 @@ public class UsersService {
 		return usersRepository.save(users);
 	};
 
+	public int setLastupdateByUsername(String username, Date lastupdate) {
+		return usersRepository.saveUsersByUsernameAndLastupdate(username, lastupdate);
+	};
 
     
 }

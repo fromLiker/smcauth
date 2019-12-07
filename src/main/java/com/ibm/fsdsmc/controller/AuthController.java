@@ -16,9 +16,13 @@ import com.ibm.fsdsmc.constant.Const;
 import com.ibm.fsdsmc.filters.SmcUserDetailsService;
 import com.ibm.fsdsmc.model.AuthRequest;
 import com.ibm.fsdsmc.model.AuthResponse;
+import com.ibm.fsdsmc.service.UsersService;
 import com.ibm.fsdsmc.utils.CommonResult;
 import com.ibm.fsdsmc.utils.JwtTokenUtil;
 import com.ibm.fsdsmc.utils.ResponseBean;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import static org.springframework.http.HttpStatus.*;
 
@@ -31,6 +35,8 @@ public class AuthController {
   private SmcUserDetailsService smcuserDetailsService;
   @Autowired
   private AuthenticationManager authenticationManager;
+  @Autowired
+  UsersService usersService;
 
   @PostMapping("/login")
   public ResponseEntity<CommonResult> login(@RequestBody AuthRequest request) throws Exception {
@@ -42,7 +48,15 @@ public class AuthController {
 
     // Reload password post-security so we can generate token
     UserDetails userDetails = smcuserDetailsService.loadUserByUsername(request.getUsername());
+    
+    // login, changepw, logout will update lastupdate column
+    Date logindate = new Date();    
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+    System.out.println(df.format(logindate)); 
+    usersService.setLastupdateByUsername(request.getUsername(), logindate);
+
     String jwtToken = JwtTokenUtil.generateToken(userDetails, false);
+    System.out.println("jwtToken >>>>"+jwtToken);
     
     AuthResponse authResponse = new AuthResponse();
     // authResponse.setUsername(request.getUsername());
@@ -53,6 +67,38 @@ public class AuthController {
     
 //    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse)); 
     return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", authResponse));
+    
+// //    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse)); 
+//         return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", authResponse));	
+//     if(usersService.setLastupdateByUsername(request.getUsername(), logindate)>0) {
+//         String jwtToken = JwtTokenUtil.generateToken(userDetails, false);
+//         System.out.println("jwtToken >>>>"+jwtToken);
+//         AuthResponse authResponse = new AuthResponse();
+//         // authResponse.setUsername(request.getUsername());
+//         authResponse.setUsername(userDetails.getUsername());
+//         Set<GrantedAuthority> authorities = (Set<GrantedAuthority>) userDetails.getAuthorities();
+//         authResponse.setUsertype(authorities.toArray()[0].toString());
+//         authResponse.setJwtToken(jwtToken);
+    
+// //    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse)); 
+//         return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", authResponse));
+//     }else{
+//     	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Login failed! Please check your id and password."));
+//     }
+
+  }
+  
+  @GetMapping("/logout/{username}")
+  public ResponseEntity<CommonResult> logout(@PathVariable("username") String username) throws Exception {
+    
+    // login, changepw, logout will update lastupdate column
+    Date logoutDate = new Date();    
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+    System.out.println(df.format(logoutDate)); 	
+    if(usersService.setLastupdateByUsername(username, logoutDate)>0)
+    	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "You have exited successfully!"));
+	 
+    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Logout failed!"));
   }
 
   // use for test

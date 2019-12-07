@@ -1,5 +1,6 @@
 package com.ibm.fsdsmc.entity;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,7 +34,18 @@ public class Users {
     @Column(name = "confirmed", nullable = false)
     private String confirmed;
 
-    public Integer getUserid() {
+    @Column(name = "lastupdate", nullable = false)
+    private Date lastupdate;
+
+    public Date getLastupdate() {
+		return lastupdate;
+	}
+
+	public void setLastupdate(Date lastupdate) {
+		this.lastupdate = lastupdate;
+	}
+
+	public Integer getUserid() {
         return userid;
     }
 

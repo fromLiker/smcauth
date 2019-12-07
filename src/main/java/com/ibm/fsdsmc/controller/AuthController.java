@@ -48,7 +48,15 @@ public class AuthController {
 
     // Reload password post-security so we can generate token
     UserDetails userDetails = smcuserDetailsService.loadUserByUsername(request.getUsername());
+    
+    // login, changepw, logout will update lastupdate column
+    Date logindate = new Date();    
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+    System.out.println(df.format(logindate)); 
+    usersService.setLastupdateByUsername(request.getUsername(), logindate);
+
     String jwtToken = JwtTokenUtil.generateToken(userDetails, false);
+    System.out.println("jwtToken >>>>"+jwtToken);
     
     AuthResponse authResponse = new AuthResponse();
     // authResponse.setUsername(request.getUsername());

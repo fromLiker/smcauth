@@ -1,0 +1,84 @@
+spring:  
+  application:
+    name: SMCAuthApp
+
+  mail: # JavaMailSender config
+    # maillink: http://localhost:8080/smc/users/confirmed/
+    host: smtp.163.com
+    port: 465 # mailSenderServer：smtp.163.com，use SSL，prot 465 or 587
+    username: liker007@163.com
+    password: liker007   # token generated from mail.163.com
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true # enable auth verification
+          socketFactory.class: javax.net.ssl.SSLSocketFactory # Socket factory for SSL
+          starttls:
+            enable: true # Encrypted communication
+            required: true # Require encrypted communication
+            
+  jpa: 
+    database: mysql
+    show-sql: true
+    hibernate: 
+      ddl-auto: update
+    properties:
+      hibernate: 
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        
+  profiles:  
+    active: dev
+  
+    
+---
+spring:
+  profiles: dev
+
+  mail: # JavaMailSender config
+    maillink: http://localhost:8080/smc/users/confirmed/
+
+  #数据库连接配置
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/smc?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: admin
+
+server:
+  port: 8080
+
+# a日志设置配置信息
+logging:
+  config: classpath:logback-spring.xml
+      
+#eureka settings
+#spring.application.name: service-smc
+#eureka.instance.hostname: localhost
+#eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka
+
+---
+spring:
+  profiles: prod
+
+  mail: # JavaMailSender config
+    maillink: http://106.54.194.33:8081/smc/users/confirmed/
+
+  #数据库连接配置
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://106.54.194.33:3306/smc?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: admin
+    
+server:
+  port: 8081
+
+# a日志设置配置信息
+logging:
+  config: classpath:logback-prod.xm
+      
+#eureka settings
+#spring.application.name: service-smc
+##eureka.instance.hostname: 106.54.194.33
+##eureka.client.serviceUrl.defaultZone: http://106.54.194.33:8761/eureka

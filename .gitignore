@@ -36,4 +36,3 @@ log/
 .metadata/
 
 generatorConfig.xml
-src/main/resources/application.yml

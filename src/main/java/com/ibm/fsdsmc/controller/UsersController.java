@@ -53,7 +53,7 @@ public class UsersController {
     	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User sign up failed, please check your enters!"));
     
     // send email
-//    mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
+    mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
     
     return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "A confirmation email have sent to you, please go to your mailbox to confirm first!"));
 
@@ -106,8 +106,8 @@ public class UsersController {
 	  }
 	  
 	  // send email
-	//   String email = oneuser.getEmail();
-	//   mailService.sendNewPasswordEmail(email, newpw);
+	  String email = oneuser.getEmail();
+	  mailService.sendNewPasswordEmail(email, newpw);
 
       return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Password change successed, you can also find your new password in your mail box, please relogin with your new pasword!"));
 

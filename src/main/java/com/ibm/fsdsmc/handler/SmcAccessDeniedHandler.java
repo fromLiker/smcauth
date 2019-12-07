@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 @Component
 public class SmcAccessDeniedHandler implements AccessDeniedHandler {
-	
+//	AccessDeineHandler 用来解决认证过的用户访问无权限资源时的异常
 	private static Logger logger = LoggerFactory.getLogger(SmcAccessDeniedHandler.class);
 	  
 	@Override

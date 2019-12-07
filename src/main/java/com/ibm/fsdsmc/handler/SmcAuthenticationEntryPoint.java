@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Component
 public class SmcAuthenticationEntryPoint implements AuthenticationEntryPoint {
-	
+//	AuthenticationEntryPoint 用来解决匿名用户访问无权限资源时的异常
 	private static Logger logger = LoggerFactory.getLogger(SmcAccessDeniedHandler.class);
 	
     @Override

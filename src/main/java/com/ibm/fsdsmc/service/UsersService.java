@@ -36,6 +36,8 @@ public class UsersService {
 		return usersRepository.saveUsersByUsernameAndLastupdate(username, lastupdate);
 	};
 
-
+	public Users getUserByUsernameAndPassword(String username, String password) {
+		return usersRepository.findByUsername(username);
+	}
     
 }

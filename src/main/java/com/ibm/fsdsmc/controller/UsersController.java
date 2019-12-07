@@ -77,10 +77,39 @@ public class UsersController {
 //	  return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data("User have confirmed!"));
   }
   
-//  @PostMapping("/settings")
-//  public ResponseEntity<CommonResult> updateUsersInfo(@RequestBody UsersInfo usersInfo) throws Exception {
-//	  return null;
-//  }
+  @PostMapping("/settings")
+  public ResponseEntity<CommonResult> updateUsersInfo(@RequestBody UsersInfo usersInfo) throws Exception {
+	  
+    String username = usersInfo.getUsername();
+    String oldpw = usersInfo.getPassword();
+    String newpw = usersInfo.getNewpassword();
+    
+    try {
+
+      // validate old pw
+      Users oneuser = usersService.getUserByUsernameAndPassword(username, oldpw);
+      if (oneuser == null) {
+        return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Your old password is not correct !"));
+      }
+
+      // update pw
+      Users users = new Users();
+      BeanUtilsCopy.copyPropertiesNoNull(oneuser, users);
+      users.setPassword(newpw);
+      usersService.saveUsersInfo(users);
+      
+      // send email
+      String email = oneuser.getEmail();
+      mailService.sendNewPasswordEmail(email, newpw);
+      return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Password change successed, please relogin with your new pasword!"));
+      
+    }catch (Exception e){
+      e.printStackTrace();
+        System.out.println("password change error >>>"+e);
+        return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Password change failed, please check your enters!"));
+    }
+
+  }
 
   @ExceptionHandler(AuthenticationException.class)
   @ResponseStatus(UNAUTHORIZED)

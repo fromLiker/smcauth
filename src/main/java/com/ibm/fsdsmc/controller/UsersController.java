@@ -53,8 +53,14 @@ public class UsersController {
 ////  users.setPassword(passwordEncoder.encode(password));
 //    users.setPassword(password);
 
-    if(usersService.saveUsersInfo(users)==null)
+    try {
+    	usersService.saveUsersInfo(users);
+    }catch (Exception e){
+    	e.printStackTrace();
+    	System.out.println("db error");
+    	logger.error("db error >>> ", e.getMessage());
     	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User sign up failed, please check your enters, user name may have been registered, you can try another one!"));
+    }
     
     try {
 	    // send email
@@ -107,9 +113,15 @@ public class UsersController {
 	  Users users = new Users();
 	  BeanUtilsCopy.copyPropertiesNoNull(oneuser, users);
 	  users.setPassword(newpw);
-	  if(usersService.saveUsersInfo(users)==null){
-		return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Password change failed, please check your enters!"));
-	  }
+
+      try {
+    	  usersService.saveUsersInfo(users);
+      }catch (Exception e){
+    	  e.printStackTrace();
+    	  System.out.println("pw db error");
+    	  logger.error("pw db error >>> ", e.getMessage());
+  		  return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Password change failed, make sure you following the password change rules!"));
+      }
 	
 	  // login, changepw, logout will update lastupdate column
 	  if(!(usersService.setLastupdateByUsername(username, new Date())>0)) {

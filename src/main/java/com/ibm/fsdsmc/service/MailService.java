@@ -54,7 +54,7 @@ public class MailService {
     @Async
     public void sendHTMLMail(String email, String username) throws MessagingException{
     
-        try {
+//        try {
     	MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom("liker007@163.com");
@@ -64,18 +64,18 @@ public class MailService {
             messageHelper.setText("<a href='"+ maillink + username + "'>please click here to confirm your sign up!</a>", true);
             mailSender.send(mimeMessage);
             System.out.println("发送html文本文件-成功");
-        }catch (Exception e){
-        	e.printStackTrace();
-        	System.out.println("发送html文本文件-发生异常");
-        	logger.error("html email send failed!", e.getMessage());
-        }
+//        }catch (Exception e){
+//        	e.printStackTrace();
+//        	System.out.println("发送html文本文件-发生异常");
+//        	logger.error("html email send failed!", e.getMessage());
+//        }
     }
     
     /**
      * a发送new pw
      */
     public void sendNewPasswordEmail(String email, String newpassword){
-        try {
+//        try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("liker007@163.com");
             message.setTo(email);
@@ -84,10 +84,10 @@ public class MailService {
             message.setCc("liker007@163.com");
             mailSender.send(message);
 
-        }catch (Exception e){
-        	e.printStackTrace();
-            System.out.println("发送简单文本文件-发生异常"+e);
-        }
+//        }catch (Exception e){
+//        	e.printStackTrace();
+//            System.out.println("发送简单文本文件-发生异常"+e.getMessage());
+//        }
     }
     
     

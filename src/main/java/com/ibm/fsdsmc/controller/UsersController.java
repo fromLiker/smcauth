@@ -54,10 +54,17 @@ public class UsersController {
 //    users.setPassword(password);
 
     if(usersService.saveUsersInfo(users)==null)
-    	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User sign up failed, please check your enters!"));
+    	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "User sign up failed, please check your enters, user name may have been registered, you can try another one!"));
     
-    // send email
-    mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
+    try {
+	    // send email
+	    mailService.sendHTMLMail(usersInfo.getEmail(), usersInfo.getUsername());
+    }catch (Exception e){
+    	e.printStackTrace();
+    	System.out.println("发送html文本文件-发生异常");
+    	logger.error("html email send failed!", e.getMessage());
+		return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Email sent failed due to net issue! Pleasae re-signup later, Thanks."));
+    }
     
     return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "A confirmation email have sent to you, please go to your mailbox to confirm first!"));
 
@@ -109,9 +116,14 @@ public class UsersController {
 	    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "database error, please wait a moment and retry or contact with system admin!"));
 	  }
 	  
-	  // send email
-	  String email = oneuser.getEmail();
-	  mailService.sendNewPasswordEmail(email, newpw);
+	  try {
+		  // send email
+		  String email = oneuser.getEmail();
+		  mailService.sendNewPasswordEmail(email, newpw);
+	  }catch (Exception e){
+      	  e.printStackTrace();
+          System.out.println("发送简单文本文件-发生异常"+e.getMessage());
+	  }
 
       return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Password change successed, you can also find your new password in your mail box, please relogin with your new pasword!"));
 

@@ -40,9 +40,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     String authToken = request.getHeader(JwtTokenUtil.TOKEN_HEADER);
     if (authToken != null && authToken.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
       authToken = authToken.substring(JwtTokenUtil.TOKEN_PREFIX.length());
+      if (authToken.equals("null")) {
+	      filterChain.doFilter(request, response);
+	      return;
+	    }
       logger.debug("JwtAuthenticationTokenFilter - authTokenHeader = {}", authToken);
     } else {
-      authToken = request.getParameter("jwt-token");
+      authToken = request.getParameter("JWT-Tonken");
       logger.debug("JwtAuthenticationTokenFilter - authTokenParams = {}" + authToken);
 
       if (authToken == null) {
@@ -53,6 +57,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     try {
       String username = JwtTokenUtil.getUsername(authToken); // if token invalid, will get exception here
+      
+      // add start
       Claims claims = JwtTokenUtil.getTokenBody(authToken);
       if(claims == null ){
       	filterChain.doFilter(request, response);
@@ -64,8 +70,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
           	return;
          }
       }
+      // add end
+
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-       logger.debug("JwtAuthenticationTokenFilter: checking authentication for user = {}", username);
+        logger.debug("JwtAuthenticationTokenFilter: checking authentication for user = {}", username);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if (JwtTokenUtil.validateToken(authToken, userDetails)) {
           UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), "N/A",

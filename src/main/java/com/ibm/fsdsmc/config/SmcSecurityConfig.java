@@ -3,6 +3,7 @@ package com.ibm.fsdsmc.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,6 +46,7 @@ public class SmcSecurityConfig extends WebSecurityConfigurerAdapter {
 	    .and().exceptionHandling().accessDeniedHandler(smcAccessDeniedHandler).authenticationEntryPoint(smcAuthenticationEntryPoint) //
 	    .and().authorizeRequests() // enable authorize HttpServletRequest
 	    .antMatchers("/smc/secure/login").permitAll() // permit for login
+	    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // 给所有预请求方法放行
 //	    .antMatchers("/smc/secure/logout/**").permitAll() // permit for logout
 	    .antMatchers("/smc/secure/admin/**").hasRole("admin") // only allowed for role "admin" case-sensitive
 	    .antMatchers("/smc/secure/user/**").hasAnyRole("admin", "user") // only allowed for roles "admin", "user" case-sensitive

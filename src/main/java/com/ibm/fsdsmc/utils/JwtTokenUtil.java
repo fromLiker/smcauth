@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class JwtTokenUtil implements Serializable {
 
-  public static final String TOKEN_HEADER = "JWT-Token";
+  public static final String TOKEN_HEADER = "Authorization";
   public static final String TOKEN_PREFIX = "Shazi ";
   public static final long EXPIRATION = 86400000L; // 1 day (millisecond)
   public static final long EXPIRATION_REMEMBER = 604800000L; // 7 days

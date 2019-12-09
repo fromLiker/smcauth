@@ -141,6 +141,16 @@ public class UsersController {
 
   }
 
+  @GetMapping("/logout/{username}")
+  public ResponseEntity<CommonResult> logout(@PathVariable("username") String username) throws Exception {
+    
+    // login, changepw, logout will update lastupdate column
+    if(usersService.setLastupdateByUsername(username, new Date())>0)
+    	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "You have exited successfully!"));
+	 
+    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Logout failed!"));
+  }
+  
   @ExceptionHandler(AuthenticationException.class)
   @ResponseStatus(UNAUTHORIZED)
   public ResponseEntity<ResponseBean> handleAuthentication401Exception(AuthenticationException exception) throws Exception {

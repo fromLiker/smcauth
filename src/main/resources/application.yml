@@ -1,9 +1,9 @@
 spring:  
   application:
-    name: SMCAuthApp
+    name: securityuser-service
 
   mail: # JavaMailSender config
-    # maillink: http://localhost:8080/smc/users/confirmed/
+    # maillink: http://localhost:8089/smc/users/confirmed/
     host: smtp.163.com
     port: 465 # mailSenderServer：smtp.163.com，use SSL，prot 465 or 587
     username: liker007@163.com
@@ -36,7 +36,7 @@ spring:
   profiles: dev
 
   mail: # JavaMailSender config
-    maillink: http://localhost:8080/smc/users/confirmed/
+    maillink: http://localhost:8089/smc/users/confirmed/
     loginlink: http://localhost:4200/login
 
   #数据库连接配置
@@ -54,17 +54,26 @@ logging:
   config: classpath:logback-spring.xml
       
 #eureka settings
-#spring.application.name: service-smc
-#eureka.instance.hostname: localhost
-#eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    #    prefer-ip-address: true
+    #    hostname: localhost
+    #    instance-id: 127.0.0.1:${server.port}
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10
 
 ---
 spring:
   profiles: prod
 
   mail: # JavaMailSender config
-    maillink: http://106.54.194.33:8081/smc/users/confirmed/
-    loginlink: http://106.54.194.33:4201/login
+    maillink: http://106.54.194.33:8089/smc/users/confirmed/
+    loginlink: http://106.54.194.33:4200/login
 
   #数据库连接配置
   datasource:
@@ -79,8 +88,17 @@ server:
 # a日志设置配置信息
 logging:
   config: classpath:logback-prod.xm
-      
-#eureka settings
-#spring.application.name: service-smc
-##eureka.instance.hostname: 106.54.194.33
-##eureka.client.serviceUrl.defaultZone: http://106.54.194.33:8761/eureka
+
+#eureka settings     
+eureka:
+  client:
+    service-url:
+      defaultZone: http://106.54.194.33:8761/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    #    prefer-ip-address: false
+    #    hostname: 106.54.194.33
+    #    instance-id: 106.54.194.33:${server.port}
+    lease-expiration-duration-in-seconds: 30
+    lease-renewal-interval-in-seconds: 10

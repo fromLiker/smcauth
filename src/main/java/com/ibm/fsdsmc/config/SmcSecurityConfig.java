@@ -49,7 +49,7 @@ public class SmcSecurityConfig extends WebSecurityConfigurerAdapter {
 	    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // 给所有预请求方法放行
 //	    .antMatchers("/smc/secure/logout/**").permitAll() // permit for logout
 	    .antMatchers("/smc/secure/admin/**").hasRole("admin") // only allowed for role "admin" case-sensitive
-	    .antMatchers("/smc/secure/user/**").hasAnyRole("admin", "user") // only allowed for roles "admin", "user" case-sensitive
+//	    .antMatchers("/smc/secure/user/**").hasAnyRole("admin", "user") // only allowed for roles "admin", "user" case-sensitive
 //	    .antMatchers("/smc/secure/authenticated/**").permitAll() // test?
 	    .antMatchers("/smc/users/signup").permitAll() // permit for sign up
 	    .antMatchers("/smc/users/confirmed/**").permitAll() // permit for confirm user

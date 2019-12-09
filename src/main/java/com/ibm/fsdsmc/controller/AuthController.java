@@ -66,22 +66,19 @@ public class AuthController {
 //    return ResponseEntity.ok().header("JWT-Token", jwtToken).body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data(authResponse)); 
     return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Login successfully!", authResponse));
   }
-  
-  @GetMapping("/logout/{username}")
-  public ResponseEntity<CommonResult> logout(@PathVariable("username") String username) throws Exception {
-    
-    // login, changepw, logout will update lastupdate column
-    if(usersService.setLastupdateByUsername(username, new Date())>0)
-    	return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "You have exited successfully!"));
-	 
-    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Logout failed!"));
-  }
 
   // use for test
   @RequestMapping(value = "/authenticated", method = RequestMethod.GET)
   @ResponseBody
   public ResponseEntity<ResponseBean> authenticated() throws Exception {
-      return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data("AUTHENTICATED - USER VERIFIED"));
+      return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data("AUTHENTICATED - hasToken VERIFIED"));
+  }
+  
+  // use for test
+  @RequestMapping(value = "/admin", method = RequestMethod.GET)
+  @ResponseBody
+  public ResponseEntity<ResponseBean> isAdmin() throws Exception {
+      return ResponseEntity.ok().body(new ResponseBean(OK.value(), OK.getReasonPhrase()).data("AUTHENTICATED - isAdmin VERIFIED"));
   }
 
   @ExceptionHandler(AuthenticationException.class)

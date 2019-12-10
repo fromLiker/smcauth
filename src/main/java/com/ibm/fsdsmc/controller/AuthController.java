@@ -27,7 +27,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "smc/secure", produces = MediaType.APPLICATION_JSON_VALUE) // 可访问smc/secure/login
+//@RequestMapping(value = "api/smc/secure", produces = MediaType.APPLICATION_JSON_VALUE) // 可访问api/smc/secure/login
 public class AuthController {
 
   @Autowired

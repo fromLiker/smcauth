@@ -45,15 +45,12 @@ public class SmcSecurityConfig extends WebSecurityConfigurerAdapter {
 	    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // use JWT，don't create session
 	    .and().exceptionHandling().accessDeniedHandler(smcAccessDeniedHandler).authenticationEntryPoint(smcAuthenticationEntryPoint) //
 	    .and().authorizeRequests() // enable authorize HttpServletRequest
-	    .antMatchers("/smc/secure/login").permitAll() // permit for login
+	    .antMatchers("/login").permitAll() // permit for login
 	    .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // 给所有预请求方法放行
-//	    .antMatchers("/smc/secure/logout/**").permitAll() // permit for logout
-	    .antMatchers("/smc/secure/admin/**").hasRole("admin") // only allowed for role "admin" case-sensitive
-//	    .antMatchers("/smc/secure/user/**").hasAnyRole("admin", "user") // only allowed for roles "admin", "user" case-sensitive
-//	    .antMatchers("/smc/secure/authenticated/**").permitAll() // test?
-	    .antMatchers("/smc/users/signup").permitAll() // permit for sign up
-	    .antMatchers("/smc/users/confirmed/**").permitAll() // permit for confirm user
-//	    .antMatchers("/smc/users/settings").permitAll() // permit for settings
+	    .antMatchers("/admin/**").hasRole("admin") // only allowed for role "admin" case-sensitive
+//	    .antMatchers("api/smc/secure/user/**").hasAnyRole("admin", "user") // only allowed for roles "admin", "user" case-sensitive
+	    .antMatchers("/signup").permitAll() // permit for sign up
+	    .antMatchers("/confirmed/**").permitAll() // permit for confirm user
 	    .anyRequest().authenticated() // need authorize for all the others
 	    .and().addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class) // JWT based security filter
 	    .headers().cacheControl(); // disable page caching

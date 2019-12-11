@@ -12,11 +12,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.ibm.fsdsmc.entity.Users;
+import com.ibm.fsdsmc.entity.Userinfolist;
 
-public interface UsersRepository extends JpaRepository<Users, Integer> {
+public interface UsersRepository extends JpaRepository<Userinfolist, Integer> {
 		
-	Users findByUsername(String username);
+	Userinfolist findByUsername(String username);
 	// Users findByEmail(String email);
 	
 //	#########################################################################
@@ -25,18 +25,18 @@ public interface UsersRepository extends JpaRepository<Users, Integer> {
  
  @Modifying
  @Transactional
- @Query("update Users u set u.confirmed = :confirmed where u.username=:username")
+ @Query("update Userinfolist u set u.confirmed = :confirmed where u.username=:username")
  int saveUsersByUsernameAndConfirmed(@Param("username") String username, @Param("confirmed") String confirmed);
 
  @Modifying
  @Transactional
- @Query("update Users u set u.lastupdate = :lastupdate where u.username=:username")
+ @Query("update Userinfolist u set u.lastupdate = :lastupdate where u.username=:username")
  int saveUsersByUsernameAndLastupdate(@Param("username") String username, @Param("lastupdate") Date lastupdate);
 
- Users findByUsernameAndPassword(String username, String password);
+ Userinfolist findByUsernameAndPassword(String username, String password);
 
 // @GeneratedValue(strategy = GenerationType.IDENTITY)
-// Users saveUsers(Users users);
+// Userinfolist saveUsers(Userinfolist userinfolist);
  
   
 }

@@ -8,7 +8,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import com.ibm.fsdsmc.constant.Const;
-import com.ibm.fsdsmc.entity.Users;
+import com.ibm.fsdsmc.entity.Userinfolist;
 import com.ibm.fsdsmc.model.UsersInfo;
 import com.ibm.fsdsmc.service.MailService;
 import com.ibm.fsdsmc.service.UsersService;
@@ -43,10 +43,10 @@ public class UsersController {
 
   @PostMapping("/signup")
   public ResponseEntity<CommonResult> signup(@RequestBody UsersInfo usersInfo) throws Exception {
-	Users users = new Users();
+	Userinfolist userinfolist = new Userinfolist();
 	usersInfo.setConfirmed("0");
 	usersInfo.setUsertype("user");
-    BeanUtilsCopy.copyPropertiesNoNull(usersInfo, users);
+    BeanUtilsCopy.copyPropertiesNoNull(usersInfo, userinfolist);
     
 // a密码加密存储
 //    String password = users.getPassword();
@@ -54,7 +54,7 @@ public class UsersController {
 //    users.setPassword(password);
 
     try {
-    	usersService.saveUsersInfo(users);
+    	usersService.saveUsersInfo(userinfolist);
     }catch (Exception e){
     	e.printStackTrace();
     	System.out.println("db error");
@@ -104,18 +104,18 @@ public class UsersController {
 	  }
 
 	  // validate old pw
-	  Users oneuser = usersService.getUserByUsernameAndPassword(username, oldpw);
+	  Userinfolist oneuser = usersService.getUserByUsernameAndPassword(username, oldpw);
 	  if (oneuser == null) {
 	      return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "Your old password is not correct !"));
 	  }
 	
 	  // update pw
-	  Users users = new Users();
-	  BeanUtilsCopy.copyPropertiesNoNull(oneuser, users);
-	  users.setPassword(newpw);
+	  Userinfolist userinfolist = new Userinfolist();
+	  BeanUtilsCopy.copyPropertiesNoNull(oneuser, userinfolist);
+	  userinfolist.setPassword(newpw);
 
       try {
-    	  usersService.saveUsersInfo(users);
+    	  usersService.saveUsersInfo(userinfolist);
       }catch (Exception e){
     	  e.printStackTrace();
     	  System.out.println("pw db error");

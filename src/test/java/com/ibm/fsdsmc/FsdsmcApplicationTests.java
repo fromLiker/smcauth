@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.ibm.fsdsmc.entity.Users;
+import com.ibm.fsdsmc.entity.Userinfolist;
 import com.ibm.fsdsmc.service.UsersService;
 
 @RunWith(SpringRunner.class)
@@ -30,10 +30,10 @@ public class FsdsmcApplicationTests {
 			String username = "liker";
 			String password = "111111";
 			System.out.println("***********login successed");
-			Users users = usersService.getUserByUsernameAndPassword(username, password);
+			Userinfolist userinfolist = usersService.getUserByUsernameAndPassword(username, password);
 	    	System.out.println("***********login successed");
-		  	System.out.println("1*****1******" + users.getEmail());
-		    System.out.println("2*****2******" + users.getPassword());
+		  	System.out.println("1*****1******" + userinfolist.getEmail());
+		    System.out.println("2*****2******" + userinfolist.getPassword());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("***********login failed");

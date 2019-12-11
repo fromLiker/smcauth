@@ -9,7 +9,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ibm.fsdsmc.entity.Users;
+import com.ibm.fsdsmc.entity.Userinfolist;
 import com.ibm.fsdsmc.service.UsersService;
 import com.ibm.fsdsmc.utils.JwtTokenUtil;
 
@@ -64,8 +64,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
       	filterChain.doFilter(request, response);
       	return;
       }else{
-    	  Users users = usersService.getUserByUsername(username);
-          if(JwtTokenUtil.isTokenExpired(claims.getExpiration(), users.getLastupdate(), claims.getIssuedAt())){
+    	  Userinfolist userinfolist = usersService.getUserByUsername(username);
+          if(JwtTokenUtil.isTokenExpired(claims.getExpiration(), userinfolist.getLastupdate(), claims.getIssuedAt())){
           	filterChain.doFilter(request, response); 
           	return;
          }

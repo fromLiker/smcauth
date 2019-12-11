@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ibm.fsdsmc.entity.Users;
+import com.ibm.fsdsmc.entity.Userinfolist;
 import com.ibm.fsdsmc.service.UsersService;
 
 @Service
@@ -19,14 +19,14 @@ public class SmcUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Users users = usersService.getUserByUsername(username);
-    if (users == null) {
+	Userinfolist userinfolist = usersService.getUserByUsername(username);
+    if (userinfolist == null) {
       throw new UsernameNotFoundException("USERNAME NOT FOUND");
     }
-    String password = users.getPassword();
-    String role = users.getUsertype();
+    String password = userinfolist.getPassword();
+    String role = userinfolist.getUsertype();
     Boolean userDisabled = false;
-    if (!users.getConfirmed().equalsIgnoreCase("1")) {
+    if (!userinfolist.getConfirmed().equalsIgnoreCase("1")) {
       userDisabled = true;
     }
     return User.withUsername(username).password(new BCryptPasswordEncoder().encode(password)).disabled(userDisabled).roles(role).build();

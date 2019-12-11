@@ -128,14 +128,14 @@ public class UsersController {
 	    return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_ERROR_CODE, "database error, please wait a moment and retry or contact with system admin!"));
 	  }
 	  
-	  try {
-		  // send email
-		  String email = oneuser.getEmail();
-		  mailService.sendNewPasswordEmail(email, newpw);
-	  }catch (Exception e){
-      	  e.printStackTrace();
-          System.out.println("发送简单文本文件-发生异常"+e.getMessage());
-	  }
+	  // try {
+		//   // send email
+		//   String email = oneuser.getEmail();
+		//   mailService.sendNewPasswordEmail(email, newpw);
+	  // }catch (Exception e){
+    //   	  e.printStackTrace();
+    //       System.out.println("发送简单文本文件-发生异常"+e.getMessage());
+	  // }
 
       return ResponseEntity.ok().body(CommonResult.build(Const.COMMONRESULT_OK_CODE, "Password change successed, you can also find your new password in your mail box, please relogin with your new pasword!"));
 
